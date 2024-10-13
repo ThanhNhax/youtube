@@ -15,6 +15,7 @@ import SignUp from './components/SignUp';
 import Footer from './components/Footer';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ForgotPassword from './components/ForgotPassword';
 const App = () => (
   <>
     <BrowserRouter>
@@ -51,6 +52,10 @@ const App = () => (
           <Route
             path='/signup'
             element={<SignUp />}
+          />
+          <Route
+            path='/forgot-password'
+            element={<ForgotPassword />}
           />
           <Route
             path='/search/:searchTerm'

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Stack } from '@mui/material';
 
 import { useNavigate } from 'react-router-dom';
-import { fetchFromAPI } from '../utils/fetchFromAPI';
+import { api, BASE_URL, fetchFromAPI } from '../utils/fetchFromAPI';
+import axios from 'axios';
 
 let categories = [
   { type_name: 'New', icon: <i className='fa-solid fa-house'></i> },
@@ -25,11 +26,12 @@ let categories = [
 const Categories = ({ selectedCategory, setSelectedCategory }) => {
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
+
   const fetchCategoris = async () => {
     try {
-      const data = await fetchFromAPI('video-type');
+      const data = await api.get(`/video-type`);
       console.log(data);
-      setCategories(data);
+      setCategories(data.data);
     } catch (e) {
       console.log(e);
     }
@@ -46,7 +48,7 @@ const Categories = ({ selectedCategory, setSelectedCategory }) => {
         height: { sx: 'auto', md: '95%' },
         flexDirection: { md: 'column' },
       }}>
-      {categories.map((category) => (
+      {categories?.map((category) => (
         <button
           className='category-btn'
           onClick={() => navigate('/videoType/' + category.type_id)}
