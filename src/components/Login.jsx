@@ -30,6 +30,7 @@ const Login = () => {
       const login = await loginApi(payload);
 
       localStorage.setItem('LOGIN_USER', JSON.stringify(login));
+      localStorage.setItem('accessToken', login.data.accessToken);
       toast.success(login.message);
       navigate('/');
     } catch (e) {

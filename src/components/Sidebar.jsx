@@ -32,9 +32,7 @@ const Categories = ({ selectedCategory, setSelectedCategory }) => {
       const data = await api.get(`/video-type`);
       console.log(data);
       setCategories(data.data);
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
   };
 
   useEffect(() => {

@@ -3,7 +3,7 @@ import { Box, Stack, Typography } from '@mui/material';
 
 import { Videos, Sidebar } from './';
 import { useParams } from 'react-router-dom';
-import { fetchFromAPI } from '../utils/fetchFromAPI';
+import { api, fetchFromAPI } from '../utils/fetchFromAPI';
 
 const Feed = () => {
   const [selectedCategory, setSelectedCategory] = useState('New');
@@ -13,7 +13,7 @@ const Feed = () => {
 
   const fetchDataById = async () => {
     try {
-      const data = await fetchFromAPI(`video-type/${params.id}`);
+      const data = await api.get(`video-type/${params.id}`);
       setVideos(data);
     } catch (e) {
       console.log(e);

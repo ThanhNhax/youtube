@@ -16,16 +16,13 @@ export const api = axios.create({
 });
 
 // Add a request interceptor
-axios.interceptors.request.use(
+api.interceptors.request.use(
   function (config) {
     // Do something before request is sent
-    const { accessToken } = JSON.parse(localStorage.getItem('LOGIN_USER')).data;
-    console.log({ accessToken });
+    const accessToken = localStorage.getItem('accessToken');
+
     if (accessToken) {
-      config.headers = {
-        ...config.headers,
-        Authorization: `Bearer ${accessToken}`,
-      };
+      config.headers['token'] = accessToken;
     }
     return config;
   },
@@ -36,25 +33,29 @@ axios.interceptors.request.use(
 );
 
 // Add a response interceptor
-axios.interceptors.response.use(
+api.interceptors.response.use(
   function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
-
+    console.log({ response });
     // Do something with response data
     return response;
   },
   async function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
-    if (error?.response?.data?.status === 401) {
+    const originalRequest = error.config;
+    if (error?.response?.status === 401) {
       try {
         const token = await extendTokenApi();
-        console.log({ token });
+        localStorage.setItem('accessToken', token?.data);
+        // Cập nhật header Authorization với token mới
+        originalRequest.headers['token'] = token?.data;
+        return api(originalRequest);
       } catch (e) {
         console.log(e);
       }
     }
     // Do something with response error
-    return Promise.reject(error);
+    return error;
   }
 );
 
@@ -64,7 +65,6 @@ export const extendTokenApi = async () => {
     {},
     { withCredentials: true }
   );
-  localStorage.setItem('LOGIN_USER', JSON.stringify(data));
   return data;
 };
 
