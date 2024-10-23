@@ -46,16 +46,18 @@ api.interceptors.response.use(
     if (error?.response?.status === 401) {
       try {
         const token = await extendTokenApi();
-        localStorage.setItem('accessToken', token?.data);
-        // Cập nhật header Authorization với token mới
-        originalRequest.headers['token'] = token?.data;
-        return api(originalRequest);
+        if (token) {
+          localStorage.setItem('accessToken', token?.data);
+          // Cập nhật header Authorization với token mới
+          originalRequest.headers['token'] = token?.data;
+          return api(originalRequest);
+        }
       } catch (e) {
         console.log(e);
       }
     }
     // Do something with response error
-    return error;
+    return Promise.reject(error);
   }
 );
 

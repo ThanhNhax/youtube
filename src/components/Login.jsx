@@ -24,17 +24,21 @@ const Login = () => {
     console.log('login click');
     const email = document.querySelector('#email').value;
     const pass = document.querySelector('#pass').value;
-    const payload = { email, pass };
-    console.log({ payload });
+    let code = document.getElementById('code').value;
+    const payload = { email, pass, code };
+
     try {
       const login = await loginApi(payload);
-
-      localStorage.setItem('LOGIN_USER', JSON.stringify(login));
-      localStorage.setItem('accessToken', login.data.accessToken);
-      toast.success(login.message);
-      navigate('/');
+      console.log(login);
+      if (login) {
+        localStorage.setItem('LOGIN_USER', JSON.stringify(login));
+        localStorage.setItem('accessToken', login?.data?.accessToken);
+        toast.success(login?.message);
+        navigate('/');
+      }
     } catch (e) {
-      toast.error(e.response?.data?.message);
+      console.log({ e });
+      toast.error(e?.response?.data?.message);
     }
   };
 
@@ -81,6 +85,19 @@ const Login = () => {
               id='pass'
             />
           </div>
+
+          <div className='col-md-3'>
+            <label
+              htmlFor='inputEmail4'
+              className='form-label'>
+              Code
+            </label>
+            <input
+              className='form-control'
+              id='code'
+            />
+          </div>
+
           <Link
             className='text-primary'
             to={'/forgot-password'}>
